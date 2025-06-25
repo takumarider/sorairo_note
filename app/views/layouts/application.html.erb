@@ -23,6 +23,16 @@
   </head>
 
   <body>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <% if user_signed_in? %>
+      <p><%= link_to 'マイページ', users_mypage_path %></p>
+      <p><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></p>
+    <% else %>
+      <p><%= link_to 'ログイン', new_user_session_path %></p>
+      <p><%= link_to '新規登録', new_user_registration_path %></p>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
