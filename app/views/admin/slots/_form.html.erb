@@ -1,0 +1,26 @@
+<%= form_with model: [:admin, @slot] do |f| %>
+  <% if @slot.errors.any? %>
+    <div class="error-messages">
+      <% @slot.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :start_time, "開始時刻" %><br>
+    <%= f.datetime_select :start_time %>
+  </div>
+
+  <div>
+    <%= f.label :end_time, "終了時刻" %><br>
+    <%= f.datetime_select :end_time %>
+  </div>
+
+  <div>
+    <%= f.label :available, "公開する" %>
+    <%= f.check_box :available %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

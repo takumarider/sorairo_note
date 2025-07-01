@@ -1,14 +1,15 @@
 # app/controllers/admin/base_controller.rb
-
 class Admin::BaseController < ApplicationController
-  before_action :authenticate_user!
-  before_action :ensure_admin!
+  before_action :authenticate_user!   # Deviseでログイン済みか？
+  before_action :authenticate_admin!  # adminユーザーか？
+
+  layout "admin"  # 管理者用のレイアウトを適用
 
   private
 
-  def ensure_admin!
+  def authenticate_admin!
     unless current_user&.admin?
-      redirect_to root_path, alert: "権限がありません"
+      redirect_to root_path, alert: "管理者専用ページです。"
     end
   end
 end

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sorairo note - 管理画面</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+  </head>
+
+  <body>
+    <header>
+      <h1>🌤 sorairo note - 管理画面</h1>
+      <nav>
+        <ul>
+          <li><%= link_to "🏠 ダッシュボード", admin_dashboard_index_path %></li>
+          <li><%= link_to "🕒 時間枠管理", admin_slots_path %></li>
+          <li><%= link_to "📋 メニュー管理", "#" %>（後で実装）</li>
+          <li><%= link_to "👤 マイページへ", mypage_path %></li> <!-- ✅追加済み -->
+        </ul>
+      </nav>
+      <hr>
+    </header>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer>
+      <hr>
+      <p>&copy; 2025 sorairo note</p>
+    </footer>
+  </body>
+</html>
