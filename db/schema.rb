@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_01_132110) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_133451) do
+  create_table "menus", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "price", null: false
+    t.integer "duration", null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.boolean "available", default: true, null: false
+    t.bigint "slot_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slot_id"], name: "index_menus_on_slot_id"
+  end
+
   create_table "slots", charset: "utf8mb3", force: :cascade do |t|
     t.datetime "start_time"
     t.datetime "end_time"
@@ -32,4 +46,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_01_132110) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "menus", "slots"
 end
