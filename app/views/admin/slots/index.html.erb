@@ -1,0 +1,24 @@
+<h1>時間枠一覧</h1>
+
+<%= link_to "＋ 新規時間枠を追加", new_admin_slot_path %>
+
+<table>
+  <tr>
+    <th>開始</th>
+    <th>終了</th>
+    <th>公開</th>
+    <th>操作</th>
+  </tr>
+
+  <% @slots.each do |slot| %>
+    <tr>
+      <td><%= slot.start_time.strftime("%Y-%m-%d %H:%M") %></td>
+      <td><%= slot.end_time.strftime("%Y-%m-%d %H:%M") %></td>
+      <td><%= slot.available ? "○" : "×" %></td>
+      <td>
+        <%= link_to "編集", edit_admin_slot_path(slot) %> |
+        <%= link_to "削除", admin_slot_path(slot), data: { turbo_method: :delete } %>
+      </td>
+    </tr>
+  <% end %>
+</table>
