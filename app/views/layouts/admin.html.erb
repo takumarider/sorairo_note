@@ -6,7 +6,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: "all" %>
-    <%= javascript_importmap_tags %> 
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
@@ -16,7 +16,7 @@
         <ul>
           <li><%= link_to "🏠 ダッシュボード", admin_dashboard_index_path %></li>
           <li><%= link_to "🕒 時間枠管理", admin_slots_path %></li>
-          <li><%= link_to "📋 メニュー管理", "#" %>（後で実装）</li>
+          <li><%= link_to "📋 メニュー管理", admin_menus_path %></li>
           <li><%= link_to "👤 マイページへ", mypage_path %></li>
         </ul>
       </nav>

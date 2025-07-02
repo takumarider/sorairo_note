@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  price: 1
+  duration: 1
+  start_date: 2025-07-02
+  end_date: 2025-07-02
+  available: false
+  slot: one
+
+two:
+  name: MyString
+  description: MyText
+  price: 1
+  duration: 1
+  start_date: 2025-07-02
+  end_date: 2025-07-02
+  available: false
+  slot: two

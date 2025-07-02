@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
     resources :reservations
     resources :slots
+    resources :menus
   end
 
   # ヘルスチェック

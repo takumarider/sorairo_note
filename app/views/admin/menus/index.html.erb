@@ -1,0 +1,31 @@
+<h2>施術メニュー一覧</h2>
+
+<%= link_to "新規メニュー作成", new_admin_menu_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>時間枠</th>
+      <th>価格</th>
+      <th>期間</th>
+      <th>提供中</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @menus.each do |menu| %>
+      <tr>
+        <td><%= menu.name %></td>
+        <td><%= menu.slot&.start_time.strftime("%H:%M") %>〜<%= menu.slot&.end_time.strftime("%H:%M") %></td>
+        <td><%= menu.price %>円</td>
+        <td><%= menu.start_date %>〜<%= menu.end_date %></td>
+        <td><%= menu.available ? "○" : "×" %></td>
+        <td>
+          <%= link_to "編集", edit_admin_menu_path(menu) %> |
+          <%= link_to "削除", admin_menu_path(menu), data: { turbo_method: :delete } %> %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
