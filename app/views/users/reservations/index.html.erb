@@ -1,0 +1,23 @@
+<h2>予約一覧</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>日時</th>
+      <th>メニュー</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reservations.each do |reservation| %>
+      <tr>
+        <td><%= reservation.slot.start_time.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= reservation.menu.name %></td>
+        <td>
+          <%= link_to "編集", edit_users_reservation_path(reservation) %>
+          <!-- 削除機能があればここに削除リンクも追加 -->
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

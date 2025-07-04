@@ -1,13 +1,20 @@
 Rails.application.routes.draw do
-  # 認証系（Devise）
+  # 認証（Devise）
   devise_for :users
 
   # ユーザー機能
   get "users/mypage", to: "users#mypage", as: :mypage
 
-  # 管理者機能（admin名前空間）
+  namespace :users do
+    get "reservations/new"
+    get "reservations/create"
+    get "reservations/edit"
+    get "reservations/update"
+    resources :reservations, only: [ :index, :new, :create, :edit, :update ]
+  end
+
+  # 管理者機能
   namespace :admin do
-    get "dashboard/index"
     root to: "dashboard#index"
     resources :reservations
     resources :slots

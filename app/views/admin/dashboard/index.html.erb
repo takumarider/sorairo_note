@@ -1,2 +1,41 @@
-<h1>Admin::Dashboard#index</h1>
-<p>Find me in app/views/admin/dashboard/index.html.erb</p>
+<h1>管理ダッシュボード</h1>
+
+<h2>📅 今週の予約一覧</h2>
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>予約日時</th>
+      <th>ユーザー</th>
+      <th>メニュー</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @upcoming_reservations.each do |res| %>
+      <tr>
+        <td><%= res.slot.start_time.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= res.user.email %></td>
+        <td><%= res.menu.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>📊 時間帯ごとの予約数サマリー</h2>
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>時間枠（開始〜終了）</th>
+      <th>予約数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @slot_summary.each do |slot| %>
+      <tr>
+        <td><%= slot.start_time.strftime("%Y/%m/%d %H:%M") %> - <%= slot.end_time.strftime("%H:%M") %></td>
+        <td><%= slot.reservation_count %> 件</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
