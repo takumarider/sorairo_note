@@ -1,2 +1,10 @@
-<h1>Users#mypage</h1>
-<p>Find me in app/views/users/mypage.html.erb</p>
+<!-- app/views/users/mypage.html.erb -->
+
+<h2>マイページ</h2>
+
+<section>
+  <h3>予約</h3>
+  <%= link_to "新しい予約をする", new_users_reservation_path, class: "btn btn-primary" %>
+  <br>
+  <%= link_to "予約一覧を見る", users_reservations_path, class: "btn btn-secondary" %>
+</section>

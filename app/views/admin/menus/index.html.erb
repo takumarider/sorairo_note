@@ -23,7 +23,7 @@
         <td><%= menu.available ? "○" : "×" %></td>
         <td>
           <%= link_to "編集", edit_admin_menu_path(menu) %> |
-          <%= link_to "削除", admin_menu_path(menu), data: { turbo_method: :delete } %> %>
+          <%= link_to "削除", admin_menu_path(menu), data: { turbo_method: :delete } %>
         </td>
       </tr>
     <% end %>

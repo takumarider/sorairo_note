@@ -1,0 +1,27 @@
+<%= form_with model: [:users, reservation], local: true do |f| %>
+  <% if reservation.errors.any? %>
+    <div class="error-messages">
+      <ul>
+        <% reservation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- ユーザー選択は不要 -->
+
+  <div>
+    <%= f.label :slot_id, "時間枠" %><br>
+    <%= f.collection_select :slot_id, slots, :id, :start_time, prompt: "時間枠を選択してください" %>
+  </div>
+
+  <div>
+    <%= f.label :menu_id, "施術メニュー" %><br>
+    <%= f.collection_select :menu_id, menus, :id, :name, prompt: "メニューを選択してください" %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

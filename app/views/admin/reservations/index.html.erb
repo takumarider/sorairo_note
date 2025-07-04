@@ -1,0 +1,23 @@
+<table>
+  <thead>
+    <tr>
+      <th>ユーザー</th>
+      <th>時間枠</th>
+      <th>メニュー</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reservations.each do |reservation| %>
+      <tr>
+        <td><%= reservation.user.name %></td>
+        <td><%= reservation.slot.start_time.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= reservation.menu.name %></td>
+        <td>
+          <%= link_to "編集", edit_admin_reservation_path(reservation) %> |
+          <%= link_to "削除", admin_reservation_path(reservation), method: :delete, data: { confirm: "本当に削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

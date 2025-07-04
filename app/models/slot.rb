@@ -2,7 +2,10 @@ class Slot < ApplicationRecord
   validates :start_time, :end_time, presence: true
   validate :end_time_after_start_time
   validate :no_overlap
+
   has_many :menus, dependent: :destroy
+  has_many :reservations, dependent: :destroy
+
   private
 
   # 終了時間は開始時間より後であることを保証
