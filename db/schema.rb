@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_144707) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_08_121827) do
   create_table "menus", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_144707) do
     t.datetime "updated_at", null: false
     t.integer "role", default: 0, null: false
     t.boolean "admin"
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
