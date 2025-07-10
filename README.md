@@ -92,3 +92,20 @@ Reservation（予約）
     ├─ メニューの追加・編集・削除（期間限定対応）
     └─ 予約の一覧管理・編集・削除
 ```
+
+## WEBページ
+トップページ
+
+[https://gyazo.com/21ee4e650749e9b35b01a6cad2bc4638]
+
+ユーザー画面
+
+[https://gyazo.com/31596cccaac07ecaafc3c54228bb9f4a]
+[https://gyazo.com/4255fd9c7bf2ac2691fff855be31adb2]
+
+管理者画面
+
+[https://gyazo.com/08be93e4661901fe4332954e1f09fffc]
+[https://gyazo.com/5192264e5b42e94b8de68ae6552443d0]
+[https://gyazo.com/f025f93f87c1a9d917c351a978103ae5]
+
