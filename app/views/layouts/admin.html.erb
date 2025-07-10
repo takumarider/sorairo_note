@@ -6,30 +6,82 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: "all" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "admin", media: "all" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <header>
-      <h1>🌤 sorairo note - 管理画面</h1>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- ヘッダー -->
+    <header class="admin-header shadow-lg">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <!-- ロゴ・タイトル -->
+          <div class="flex items-center">
+            <h1 class="admin-logo text-2xl font-bold text-sky-800 flex items-center">
+              <span class="logo-icon text-3xl mr-2">🌤</span>
+              sorairo note
+              <span class="ml-2 text-lg font-normal text-sky-600">管理画面</span>
+            </h1>
+          </div>
+
+          <!-- ナビゲーション -->
       <nav>
-        <ul>
-          <li><%= link_to "🏠 ダッシュボード", admin_root_path %></li>
-          <li><%= link_to "🕒 時間枠管理", admin_slots_path %></li>
-          <li><%= link_to "📋 メニュー管理", admin_menus_path %></li>
-          <li><%= link_to "👤 マイページへ", mypage_path %></li>
+            <ul class="flex space-x-8">
+              <li>
+                <%= link_to admin_root_path, 
+                    class: "admin-nav-link text-sky-800 hover:text-sky-600 text-sm font-medium flex items-center #{current_page?(admin_root_path) ? 'active' : ''}" do %>
+                  <span class="mr-2">🏠</span>
+                  ダッシュボード
+                <% end %>
+              </li>
+              <li>
+                <%= link_to calendar_admin_slots_path, 
+                    class: "admin-nav-link text-sky-800 hover:text-sky-600 text-sm font-medium flex items-center #{current_page?(calendar_admin_slots_path) ? 'active' : ''}" do %>
+                  <span class="mr-2">🕒</span>
+                  時間枠管理
+                <% end %>
+              </li>
+              <li>
+                <%= link_to admin_menus_path, 
+                    class: "admin-nav-link text-sky-800 hover:text-sky-600 text-sm font-medium flex items-center #{current_page?(admin_menus_path) ? 'active' : ''}" do %>
+                  <span class="mr-2">📋</span>
+                  メニュー管理
+                <% end %>
+              </li>
+              <li>
+                <%= link_to mypage_path, 
+                    class: "admin-nav-link text-sky-800 hover:text-sky-600 text-sm font-medium flex items-center" do %>
+                  <span class="mr-2">👤</span>
+                  マイページへ
+                <% end %>
+              </li>
         </ul>
       </nav>
-      <hr>
+        </div>
+      </div>
     </header>
 
-    <main>
+    <!-- メインコンテンツ -->
+    <main class="flex-1 py-8">
+      <div class="max-w-7xl mx-auto px-6">
       <%= yield %>
+      </div>
     </main>
 
-    <footer>
-      <hr>
-      <p>&copy; 2025 sorairo note</p>
+    <!-- フッター -->
+    <footer class="admin-footer text-sky-800 mt-auto">
+      <div class="admin-footer-content max-w-7xl mx-auto px-6 py-6">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <span class="footer-logo text-2xl mr-2">🌤</span>
+            <span class="text-lg font-semibold">sorairo note</span>
+          </div>
+          <div class="text-right">
+            <p class="text-sky-600">&copy; 2025 sorairo note. All rights reserved.</p>
+            <p class="text-sm text-sky-500 mt-1">美しい時間をお届けします</p>
+          </div>
+        </div>
+      </div>
     </footer>
   </body>
 </html>

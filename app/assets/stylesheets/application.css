@@ -9,6 +9,10 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
  .notice {
   color: #155724;
   background-color: #d4edda;
@@ -31,4 +35,75 @@
   width: 90%;
   max-width: 600px;
   font-weight: bold;
+}
+
+.calendar-container {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.calendar-table {
+  padding: 0.5rem;
+}
+form {
+  padding-bottom: 6rem;
+}
+
+/* 予約決定ボタンのカスタムデザイン */
+.reserve-btn, .reserve-btn-custom {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 1.1rem 2.2rem;
+  font-size: 1.18rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e42 100%);
+  border: 3px solid #f59e42;
+  border-bottom: 6px solid #d97706;
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(251, 191, 36, 0.22), 0 2px 8px 0 rgba(0,0,0,0.12);
+  transition: background 0.18s, transform 0.08s, box-shadow 0.18s, border 0.18s;
+  cursor: pointer;
+  gap: 1.1rem;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+}
+.reserve-btn:hover, .reserve-btn-custom:hover {
+  background: linear-gradient(90deg, #fde68a 0%, #fbbf24 100%);
+  color: #b45309;
+  transform: translateY(2px) scale(1.04);
+  box-shadow: 0 4px 16px 0 rgba(251, 191, 36, 0.18);
+  border-bottom: 3px solid #f59e42;
+}
+.reserve-btn:active, .reserve-btn-custom:active {
+  background: #f59e42;
+  color: #fff;
+  transform: translateY(6px) scale(0.98);
+  box-shadow: 0 1px 2px 0 rgba(251, 191, 36, 0.10);
+  border-bottom: 1.5px solid #d97706;
+}
+.reserve-btn .icon, .reserve-btn-custom .icon {
+  font-size: 2.1rem;
+  margin-right: 0.7rem;
+  margin-bottom: 0;
+  filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.18));
+  flex-shrink: 0;
+}
+.reserve-btn .label, .reserve-btn-custom .label {
+  font-size: 1.18rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+}
+.reserve-btn .sub, .reserve-btn-custom .sub {
+  font-size: 0.88rem;
+  color: #fef3c7;
+  margin-left: 0.7rem;
+  margin-top: 0;
+  font-weight: 500;
 }

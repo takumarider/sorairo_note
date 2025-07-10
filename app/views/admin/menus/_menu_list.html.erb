@@ -1,0 +1,44 @@
+<div class="menu-list" data-menu-form-target="menuList">
+  <table>
+    <thead>
+      <tr>
+        <th>名前</th>
+        <th>時間枠</th>
+        <th>価格</th>
+        <th>期間</th>
+        <th>提供中</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% menus.each do |menu| %>
+        <tr>
+          <td><%= menu.name %></td>
+          <td>
+            <% if menu.slot.present? %>
+              <%= menu.slot.start_time.strftime("%H:%M") %>〜<%= menu.slot.end_time.strftime("%H:%M") %>
+            <% else %>
+              <span class="text-gray-500">（未設定）</span>
+            <% end %>
+          </td>
+          <td>¥<%= number_with_delimiter(menu.price) %></td>
+          <td><%= menu.start_date %>〜<%= menu.end_date %></td>
+          <td><%= menu.available ? "○" : "×" %></td>
+          <td>
+            <%= link_to "編集", edit_admin_menu_path(menu) %>
+            <% if menu.reservations.exists? %>
+              | <span class="text-gray-400 cursor-not-allowed" title="予約があるため削除できません">削除不可</span>
+            <% else %>
+              | <%= link_to "削除", 
+                          admin_menu_path(menu), 
+                          data: { 
+                            turbo_method: :delete,
+                            turbo_confirm: "「#{menu.name}」を削除しますか？この操作は取り消せません。"
+                          } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div> 

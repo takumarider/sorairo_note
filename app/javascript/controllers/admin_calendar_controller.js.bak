@@ -1,0 +1,185 @@
+import { Controller } from "@hotwired/stimulus"
+import { Calendar } from '@fullcalendar/core'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+
+export default class extends Controller {
+  static targets = ["calendar", "modal", "form"]
+  static values = { 
+    slotsUrl: String,
+    createUrl: String
+  }
+
+  connect() {
+    this.initializeCalendar()
+  }
+
+  disconnect() {
+    if (this.calendar) {
+      this.calendar.destroy()
+    }
+  }
+
+  initializeCalendar() {
+    this.calendar = new Calendar(this.calendarTarget, {
+      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+      initialView: 'timeGridWeek',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      locale: 'ja',
+      timeZone: 'Asia/Tokyo',
+      slotMinTime: '09:00:00',
+      slotMaxTime: '20:00:00',
+      selectable: true,
+      selectMirror: true,
+      dayMaxEvents: true,
+      weekends: true,
+      events: this.slotsUrlValue,
+      select: this.handleDateSelect.bind(this),
+      eventClick: this.handleEventClick.bind(this),
+      eventDrop: this.handleEventDrop.bind(this),
+      eventResize: this.handleEventResize.bind(this)
+    })
+
+    this.calendar.render()
+  }
+
+  handleDateSelect(selectInfo) {
+    const start = selectInfo.start
+    const end = selectInfo.end
+    
+    // 営業時間外の選択を防ぐ
+    if (start.getHours() < 9 || end.getHours() > 20) {
+      alert('営業時間（9:00〜20:00）内で選択してください')
+      this.calendar.unselect()
+      return
+    }
+
+    // モーダルを開いて時間枠情報を設定
+    this.openModal(start, end)
+  }
+
+  handleEventClick(clickInfo) {
+    const event = clickInfo.event
+    const slotId = event.id
+    
+    if (confirm('この時間枠を削除しますか？')) {
+      this.deleteSlot(slotId)
+    }
+  }
+
+  handleEventDrop(dropInfo) {
+    const event = dropInfo.event
+    const newStart = event.start
+    const newEnd = event.end
+    
+    this.updateSlot(event.id, newStart, newEnd)
+  }
+
+  handleEventResize(resizeInfo) {
+    const event = resizeInfo.event
+    const newStart = event.start
+    const newEnd = event.end
+    
+    this.updateSlot(event.id, newStart, newEnd)
+  }
+
+  openModal(start, end) {
+    // フォームに時間情報を設定
+    const startTimeInput = this.formTarget.querySelector('[name="slot[start_time]"]')
+    const endTimeInput = this.formTarget.querySelector('[name="slot[end_time]"]')
+    
+    if (startTimeInput && endTimeInput) {
+      startTimeInput.value = this.formatDateTime(start)
+      endTimeInput.value = this.formatDateTime(end)
+    }
+    
+    // モーダルを表示
+    this.modalTarget.classList.remove('hidden')
+  }
+
+  closeModal() {
+    this.modalTarget.classList.add('hidden')
+  }
+
+  async createSlot(event) {
+    event.preventDefault()
+    
+    const formData = new FormData(this.formTarget)
+    
+    try {
+      const response = await fetch(this.createUrlValue, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      
+      if (response.ok) {
+        this.closeModal()
+        this.calendar.refetchEvents()
+        alert('時間枠を作成しました')
+      } else {
+        const error = await response.json()
+        alert('エラーが発生しました: ' + error.message)
+      }
+    } catch (error) {
+      alert('エラーが発生しました: ' + error.message)
+    }
+  }
+
+  async deleteSlot(slotId) {
+    try {
+      const response = await fetch(`/admin/slots/${slotId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      
+      if (response.ok) {
+        this.calendar.refetchEvents()
+        alert('時間枠を削除しました')
+      } else {
+        alert('削除に失敗しました')
+      }
+    } catch (error) {
+      alert('エラーが発生しました: ' + error.message)
+    }
+  }
+
+  async updateSlot(slotId, start, end) {
+    const formData = new FormData()
+    formData.append('slot[start_time]', this.formatDateTime(start))
+    formData.append('slot[end_time]', this.formatDateTime(end))
+    
+    try {
+      const response = await fetch(`/admin/slots/${slotId}`, {
+        method: 'PATCH',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      
+      if (response.ok) {
+        this.calendar.refetchEvents()
+      } else {
+        alert('更新に失敗しました')
+        this.calendar.refetchEvents() // 元に戻す
+      }
+    } catch (error) {
+      alert('エラーが発生しました: ' + error.message)
+      this.calendar.refetchEvents() // 元に戻す
+    }
+  }
+
+  formatDateTime(date) {
+    return date.toISOString().slice(0, 16).replace('T', ' ')
+  }
+} 

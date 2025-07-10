@@ -1,27 +1,207 @@
-<%= form_with model: [:users, reservation], local: true do |f| %>
-  <% if reservation.errors.any? %>
-    <div class="error-messages">
-      <ul>
-        <% reservation.errors.full_messages.each do |message| %>
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 py-8 pb-24 overflow-visible">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-sky-800 mb-2">📅 新規予約</h1>
+      <p class="text-sky-600">希望の時間枠とメニューを選択してください</p>
+    </div>
+
+    <%= form_with model: [:users, @reservation], local: true, class: "space-y-8 overflow-visible pb-24" do |f| %>
+  <% if @reservation.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">エラーが発生しました</h3>
+              <div class="mt-2 text-sm text-red-700">
+                <ul class="list-disc pl-5 space-y-1">
+        <% @reservation.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
     </div>
-  <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
 
-  <!-- ユーザー選択は不要 -->
-
-  <div>
-    <%= f.label :slot_id, "時間枠" %><br>
-    <%= f.collection_select :slot_id, slots, :id, :start_time, prompt: "時間枠を選択してください" %>
+      <!-- 時間枠選択セクション -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">🕐 時間枠を選択</h2>
+        
+        <div data-controller="calendar" class="space-y-4">
+          <!-- カレンダー形式の時間枠選択 -->
+          <div class="calendar-container mt-2 mb-2 overflow-x-auto">
+            <table class="calendar-table w-full border-collapse">
+              <thead>
+                <tr class="bg-gray-50">
+                  <th class="border border-gray-200 px-4 py-2 text-left font-medium text-gray-700">日付</th>
+                  <% @all_slots.group_by { |s| s.start_time.strftime('%H:%M') }.keys.sort.each do |time| %>
+                    <th class="border border-gray-200 px-4 py-2 text-center font-medium text-gray-700"><%= time %></th>
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @all_slots.group_by { |s| s.start_time.to_date }.each do |date, slots| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="border border-gray-200 px-4 py-2 text-sm font-medium text-gray-900">
+                      <%= date.strftime('%m/%d（%a）') %>
+                    </td>
+                    <% @all_slots.group_by { |s| s.start_time.strftime('%H:%M') }.keys.sort.each do |time| %>
+                      <% slot = slots.find { |s| s.start_time.strftime('%H:%M') == time } %>
+                      <td class="border border-gray-200 px-2 py-2 text-center">
+                        <% if slot %>
+                          <% is_reserved = @reserved_slot_ids.include?(slot.id) %>
+            <button
+              type="button"
+                            class="calendar-slot-btn w-full px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 <%= is_reserved ? 'bg-red-100 text-red-700 cursor-not-allowed' : 'bg-sky-100 hover:bg-sky-300 hover:scale-105 text-sky-700 shadow-sm hover:shadow-md' %>"
+              data-action="click->calendar#selectSlot"
+              data-slot-id="<%= slot.id %>"
+                            data-slot-time="<%= slot.start_time.strftime('%H:%M') %>"
+                            data-slot-date="<%= slot.start_time.to_date.strftime('%m/%d（%a）') %>"
+                            style="<%= is_reserved ? '' : 'cursor: pointer;' %>"
+                            <%= 'disabled' if is_reserved %>
+                          >
+                            <% if is_reserved %>
+                              <span class="reserved-text">予約済</span>
+                            <% else %>
+                              <span class="available-text">空き</span>
+                            <% end %>
+            </button>
+                        <% else %>
+                          <span class="text-gray-400 text-sm">-</span>
+                        <% end %>
+                      </td>
+          <% end %>
+                  </tr>
+      <% end %>
+              </tbody>
+            </table>
+    </div>
   </div>
 
+  <!-- hidden_field に slot_id をセット -->
+  <%= f.hidden_field :slot_id, id: "reservation_slot_id", data: { calendar_target: "slotInput" } %>
+      </div>
+
+      <!-- 直接JavaScript -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('DOM loaded, setting up calendar buttons');
+          
+          // 全ての時間枠ボタンにイベントリスナーを追加
+          const buttons = document.querySelectorAll('.calendar-slot-btn');
+          console.log('Found buttons:', buttons.length);
+          
+          buttons.forEach(function(button) {
+            if (!button.disabled) {
+              button.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Button clicked:', this.dataset.slotId);
+                
+                // 全てのボタンをリセット
+                buttons.forEach(function(btn) {
+                  if (!btn.disabled) {
+                    btn.style.backgroundColor = '#dbeafe';
+                    btn.style.color = '#1d4ed8';
+                    btn.style.border = 'none';
+                    btn.style.boxShadow = 'none';
+                  }
+                });
+                
+                // 選択されたボタンをハイライト
+                this.style.backgroundColor = '#0ea5e9';
+                this.style.color = '#ffffff';
+                this.style.border = '2px solid #0ea5e9';
+                this.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                
+                // hidden fieldに値をセット
+                const slotInput = document.getElementById('reservation_slot_id');
+                if (slotInput) {
+                  slotInput.value = this.dataset.slotId;
+                }
+                
+
+              });
+            }
+          });
+        });
+      </script>
+
+      <!-- メニュー選択セクション -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">💇‍♀️ メニューを選択</h2>
+        
+        <div class="space-y-4">
   <div>
-    <%= f.label :menu_id, "施術メニュー" %><br>
-    <%= f.collection_select :menu_id, menus, :id, :name, prompt: "メニューを選択してください" %>
+            <%= f.label :menu_id, "施術メニュー", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.collection_select :menu_id, @menus, :id, :display_name, 
+                { prompt: "メニューを選択してください" }, 
+                { class: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" } %>
+          </div>
+        </div>
   </div>
 
-  <div>
-    <%= f.submit %>
+    <%# 予約に必要な値を取得 %>
+    <% slot_id = @reservation.slot_id || '' %>
+    <% menu_id = @reservation.menu_id || '' %>
+    <% user_id = @reservation.user_id || (current_user&.id) || '' %>
+
+  <!-- 選択内容の確認カード（料金は除外） -->
+  <div class="mb-6">
+    <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+      <div class="text-lg font-semibold text-gray-700 mb-2">選択内容の確認</div>
+      <div class="flex flex-col gap-1 text-gray-600">
+        <div>🗓️ 日付：<span id="selected-date" class="font-bold">未選択</span></div>
+        <div>🕒 時間：<span id="selected-time" class="font-bold">未選択</span></div>
+        <div>💇‍♀️ メニュー：<span id="selected-menu" class="font-bold">未選択</span></div>
+      </div>
+    </div>
   </div>
+
+  <!-- 注意書き -->
+  <div class="text-sm text-gray-500 text-center mb-2">
+    ※内容をご確認のうえ、下のボタンを押してください
+  </div>
+
+  <!-- 予約ボタン（注意書き直下、通常配置） -->
+  <div class="w-full sm:w-auto flex flex-col items-center justify-center mt-2 mb-4">
+    <button type="submit" class="reserve-btn">
+      <span class="icon">📅</span>
+      <span class="label">この内容で予約します</span>
+      <span class="sub">タップで予約が確定します</span>
+    </button>
+  </div>
+
+  <!-- 選択内容をJSで反映（料金部分の処理は削除） -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 日付・時間
+      document.querySelectorAll('.calendar-slot-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (!btn.disabled) {
+            document.getElementById('selected-date').textContent = btn.dataset.slotDate || '未選択';
+            document.getElementById('selected-time').textContent = btn.dataset.slotTime || '未選択';
+          }
+        });
+      });
+      // メニュー
+      var menuSelect = document.getElementById('reservation_menu_id') || document.querySelector('[name="reservation[menu_id]"]');
+      if (menuSelect) {
+        menuSelect.addEventListener('change', function() {
+          var selected = menuSelect.options[menuSelect.selectedIndex];
+          document.getElementById('selected-menu').textContent = selected.text || '未選択';
+        });
+        // 初期値
+        if (menuSelect.selectedIndex > 0) {
+          var selected = menuSelect.options[menuSelect.selectedIndex];
+          document.getElementById('selected-menu').textContent = selected.text || '未選択';
+        }
+      }
+    });
+  </script>
 <% end %>
+

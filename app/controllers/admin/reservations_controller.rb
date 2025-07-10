@@ -17,7 +17,7 @@ class Admin::ReservationsController < ApplicationController
     if @reservation.save
       redirect_to admin_reservations_path, notice: "予約を登録しました"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

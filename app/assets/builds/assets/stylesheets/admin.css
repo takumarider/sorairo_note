@@ -1,0 +1,301 @@
+/* app/assets/stylesheets/admin.css */
+.admin-header {
+  background:
+    linear-gradient(
+      135deg,
+      #e0f2fe 0%,
+      #bae6fd 50%,
+      #7dd3fc 100%);
+  position: relative;
+  overflow: hidden;
+}
+.admin-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+.admin-logo {
+  position: relative;
+  z-index: 10;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+.logo-icon {
+  animation: logoPulse 2s ease-in-out infinite;
+}
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+@keyframes logoPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.admin-nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+.admin-nav-link:hover {
+  background: rgba(14, 165, 233, 0.1);
+  transform: translateY(-1px);
+}
+.admin-nav-link.active {
+  background: rgba(14, 165, 233, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.admin-nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #0ea5e9;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+.admin-nav-link:hover::after,
+.admin-nav-link.active::after {
+  width: 80%;
+}
+.admin-footer {
+  background:
+    linear-gradient(
+      135deg,
+      #e0f2fe 0%,
+      #bae6fd 50%,
+      #7dd3fc 100%);
+  position: relative;
+  overflow: hidden;
+}
+.admin-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="rgba(14,165,233,0.2)"/><circle cx="80" cy="40" r="0.3" fill="rgba(14,165,233,0.15)"/><circle cx="40" cy="80" r="0.4" fill="rgba(14,165,233,0.18)"/><circle cx="90" cy="90" r="0.2" fill="rgba(14,165,233,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+  opacity: 0.3;
+}
+.admin-footer-content {
+  position: relative;
+  z-index: 10;
+}
+.footer-logo {
+  animation: footerPulse 3s ease-in-out infinite;
+}
+@keyframes footerPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+.dashboard-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e0f2fe;
+}
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.15);
+}
+.admin-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.admin-table th {
+  background:
+    linear-gradient(
+      135deg,
+      #f0f9ff 0%,
+      #e0f2fe 100%);
+  font-weight: 600;
+  color: #0c4a6e;
+  border-bottom: 2px solid #bae6fd;
+}
+.admin-table tr:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #f0f9ff 0%,
+      #e0f2fe 100%);
+}
+.admin-btn {
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+.admin-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+.admin-btn-primary {
+  background:
+    linear-gradient(
+      135deg,
+      #0ea5e9 0%,
+      #3b82f6 100%);
+  color: white;
+  border: none;
+}
+.admin-btn-primary:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #0284c7 0%,
+      #2563eb 100%);
+}
+.admin-btn-secondary {
+  background:
+    linear-gradient(
+      135deg,
+      #f1f5f9 0%,
+      #e2e8f0 100%);
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+.admin-btn-secondary:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #e2e8f0 0%,
+      #cbd5e1 100%);
+}
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-badge-success {
+  background:
+    linear-gradient(
+      135deg,
+      #dcfce7 0%,
+      #bbf7d0 100%);
+  color: #166534;
+  border: 1px solid #86efac;
+}
+.status-badge-warning {
+  background:
+    linear-gradient(
+      135deg,
+      #fef3c7 0%,
+      #fde68a 100%);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+.status-badge-danger {
+  background:
+    linear-gradient(
+      135deg,
+      #fee2e2 0%,
+      #fecaca 100%);
+  color: #991b1b;
+  border: 1px solid #f87171;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+@media (min-width: 1024px) {
+  .admin-header {
+    padding: 1rem 0;
+  }
+  .admin-nav-link {
+    font-size: 0.875rem;
+    padding: 0.75rem 1.25rem;
+  }
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+  .admin-table th,
+  .admin-table td {
+    padding: 1rem 1.5rem;
+  }
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(
+      135deg,
+      #0ea5e9 0%,
+      #3b82f6 100%);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #0284c7 0%,
+      #2563eb 100%);
+}
+.admin-nav-link:focus,
+.admin-btn:focus {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+  animation: loading 1.5s infinite;
+}
+@keyframes loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+/*# sourceMappingURL=/assets/assets/stylesheets/admin.css.map */
