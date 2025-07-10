@@ -1,41 +1,198 @@
-<h1>管理ダッシュボード</h1>
+<!-- ダッシュボードヘッダー -->
+<div class="mb-6">
+  <h1 class="text-3xl font-bold text-gray-900 mb-2">管理ダッシュボード</h1>
+  <p class="text-gray-600">今日の予約状況とサマリー</p>
+</div>
 
-<h2>📅 今週の予約一覧</h2>
-<table border="1" cellpadding="6">
-  <thead>
-    <tr>
-      <th>予約日時</th>
-      <th>ユーザー</th>
-      <th>メニュー</th>
+<!-- サマリーカード（横並び） -->
+<div class="grid grid-cols-4 gap-4 mb-6">
+  <!-- 今日の予約数 -->
+  <div class="bg-white rounded-lg shadow border border-sky-100 p-4">
+    <div class="flex items-center">
+      <div class="w-10 h-10 bg-gradient-to-br from-sky-400 to-blue-500 rounded-lg flex items-center justify-center">
+        <span class="text-white text-lg">📅</span>
+      </div>
+      <div class="ml-3">
+        <p class="text-xs text-gray-500">今日の予約</p>
+        <p class="text-2xl font-bold text-gray-900"><%= @upcoming_reservations.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今週の予約数 -->
+  <div class="bg-white rounded-lg shadow border border-sky-100 p-4">
+    <div class="flex items-center">
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
+        <span class="text-white text-lg">📊</span>
+      </div>
+      <div class="ml-3">
+        <p class="text-xs text-gray-500">今週の予約</p>
+        <p class="text-2xl font-bold text-gray-900"><%= @slot_summary.sum(&:reservation_count) %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 利用可能メニュー数 -->
+  <div class="bg-white rounded-lg shadow border border-sky-100 p-4">
+    <div class="flex items-center">
+      <div class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center">
+        <span class="text-white text-lg">📋</span>
+      </div>
+      <div class="ml-3">
+        <p class="text-xs text-gray-500">利用可能メニュー</p>
+        <p class="text-2xl font-bold text-gray-900"><%= Menu.available.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今月の売上予想 -->
+  <div class="bg-white rounded-lg shadow border border-sky-100 p-4">
+    <div class="flex items-center">
+      <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-green-500 rounded-lg flex items-center justify-center">
+        <span class="text-white text-lg">💰</span>
+      </div>
+      <div class="ml-3">
+        <p class="text-xs text-gray-500">売上予想</p>
+        <p class="text-2xl font-bold text-gray-900">
+          ¥<%= number_with_delimiter(@upcoming_reservations.sum { |r| r.menu.price }) %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- メインコンテンツエリア（横並び） -->
+<div class="grid grid-cols-2 gap-6">
+  <!-- 今週の予約一覧（左側） -->
+  <div class="bg-white rounded-lg shadow border border-sky-100">
+    <div class="px-4 py-3 border-b border-sky-100 bg-sky-50 rounded-t-lg">
+      <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+        <span class="mr-2 text-xl">📅</span>
+        今週の予約一覧
+        <span class="ml-auto text-sm text-gray-500">
+          <%= @upcoming_reservations.count %>件
+        </span>
+      </h2>
+    </div>
+    
+    <% if @upcoming_reservations.any? %>
+      <div class="overflow-hidden">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">日時</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">お客様</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">メニュー</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">料金</th>
     </tr>
   </thead>
-  <tbody>
-    <% @upcoming_reservations.each do |res| %>
-      <tr>
-        <td><%= res.slot.start_time.strftime("%Y/%m/%d %H:%M") %></td>
-        <td><%= res.user.name %></td> <!-- ここをemailからnameに変更 -->
-        <td><%= res.menu.name %></td>
+          <tbody class="divide-y divide-gray-100">
+            <% @upcoming_reservations.each do |reservation| %>
+              <tr class="hover:bg-sky-50">
+                <td class="px-4 py-3">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= reservation.slot.start_time.strftime("%m/%d %H:%M") %>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="text-sm text-gray-900">
+                    <%= reservation.user.name %>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="text-sm text-gray-900">
+                    <%= reservation.menu.name %>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="text-sm font-medium text-sky-600">
+                    ¥<%= number_with_delimiter(reservation.menu.price) %>
+                  </span>
+                </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<hr>
-
-<h2>📊 時間帯ごとの予約数サマリー</h2>
-<table border="1" cellpadding="6">
-  <thead>
-    <tr>
-      <th>時間枠（開始〜終了）</th>
-      <th>予約数</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @slot_summary.each do |slot| %>
-      <tr>
-        <td><%= slot.start_time.strftime("%Y/%m/%d %H:%M") %> - <%= slot.end_time.strftime("%H:%M") %></td>
-        <td><%= slot.reservation_count %> 件</td>
-      </tr>
+      </div>
+    <% else %>
+      <div class="px-4 py-8 text-center">
+        <div class="text-gray-400 text-4xl mb-2">📅</div>
+        <p class="text-gray-500 text-sm">今週の予約はありません</p>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <!-- 右側の情報（横並び） -->
+  <div class="grid grid-cols-1 gap-4">
+    <!-- 時間帯別予約サマリー -->
+    <div class="bg-white rounded-lg shadow border border-sky-100">
+      <div class="px-4 py-3 border-b border-sky-100 bg-sky-50 rounded-t-lg">
+        <h3 class="text-sm font-semibold text-gray-900 flex items-center">
+          <span class="mr-2">📊</span>
+          時間帯別予約状況
+        </h3>
+      </div>
+      
+      <% if @slot_summary.any? %>
+        <div class="p-3">
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <% @slot_summary.each do |slot| %>
+              <div class="text-center p-2 bg-gray-50 rounded">
+                <div class="text-xs text-gray-600">
+                  <%= slot.start_time.strftime("%H:%M") %>
+                </div>
+                <div class="text-sm font-bold text-gray-900">
+                  <%= slot.reservation_count %>
+                </div>
+                <div class="mt-1">
+                  <% if slot.reservation_count > 0 %>
+                    <span class="inline-block w-2 h-2 bg-green-400 rounded-full"></span>
+                  <% else %>
+                    <span class="inline-block w-2 h-2 bg-gray-300 rounded-full"></span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="px-4 py-6 text-center">
+          <div class="text-gray-400 text-2xl mb-1">📊</div>
+          <p class="text-gray-500 text-xs">データなし</p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 今日の予約状況 -->
+    <div class="bg-white rounded-lg shadow border border-sky-100">
+      <div class="px-4 py-3 border-b border-sky-100 bg-sky-50 rounded-t-lg">
+        <h3 class="text-sm font-semibold text-gray-900 flex items-center">
+          <span class="mr-2">📈</span>
+          今日の状況
+        </h3>
+      </div>
+      <div class="p-3">
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-xs text-gray-600 mb-1">予約済み</div>
+            <div class="text-lg font-bold text-green-600">
+              <%= @upcoming_reservations.count %>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-600 mb-1">空き枠</div>
+            <div class="text-lg font-bold text-blue-600">
+              <%= @slot_summary.count - @upcoming_reservations.count %>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-600 mb-1">稼働率</div>
+            <div class="text-lg font-bold text-sky-600">
+              <%= @slot_summary.count > 0 ? ((@upcoming_reservations.count.to_f / @slot_summary.count) * 100).round(1) : 0 %>%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

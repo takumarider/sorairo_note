@@ -1,10 +1,23 @@
 <!-- app/views/users/mypage.html.erb -->
 
-<h2>マイページ</h2>
+<div class="max-w-md mx-auto p-4">
+  <h2 class="text-2xl font-bold mb-6 text-center border-b pb-2">マイページ</h2>
 
-<section>
-  <h3>予約</h3>
-  <%= link_to "新しい予約をする", new_users_reservation_path, class: "btn btn-primary" %>
-  <br>
-  <%= link_to "予約一覧を見る", users_reservations_path, class: "btn btn-secondary" %>
-</section>
+  <section class="mb-8">
+    <h3 class="text-lg font-semibold mb-4 text-gray-700 border-l-4 border-blue-400 pl-2">予約</h3>
+    <div class="flex flex-col sm:flex-row gap-4">
+      <div class="flex-1 bg-white rounded-xl shadow p-4 flex flex-col items-center hover:shadow-lg transition">
+        <%= link_to new_users_reservation_path, class: "w-full flex flex-col items-center", data: { turbo: false } do %>
+          <span class="text-3xl mb-2">📅</span>
+          <span class="font-medium text-blue-600">新しい予約をする</span>
+        <% end %>
+      </div>
+      <div class="flex-1 bg-white rounded-xl shadow p-4 flex flex-col items-center hover:shadow-lg transition">
+        <%= link_to users_reservations_path, class: "w-full flex flex-col items-center" do %>
+          <span class="text-3xl mb-2">📖</span>
+          <span class="font-medium text-blue-600">予約一覧を見る</span>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>

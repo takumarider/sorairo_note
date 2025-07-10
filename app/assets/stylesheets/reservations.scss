@@ -1,0 +1,131 @@
+// カレンダー形式のUI
+.calendar-container {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.calendar-table th {
+  background: #f8f9fa;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-cell {
+  background: #f8f9fa;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.slot-cell {
+  padding: 4px;
+}
+
+.calendar-slot-btn {
+  width: 100%;
+  padding: 8px 4px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-slot-btn:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.05);
+}
+
+.calendar-slot-btn.selected {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+  font-weight: bold;
+}
+
+.calendar-slot-btn.reserved {
+  background-color: #f0f0f0;
+  color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.calendar-slot-btn.reserved:hover {
+  background-color: #f0f0f0;
+  color: #ccc;
+  transform: none;
+}
+
+.available-text {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.reserved-text {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.no-slot {
+  color: #ccc;
+  font-style: italic;
+}
+
+// 既存のスタイル
+.slot-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.slot-btn {
+  padding: 6px 12px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.slot-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+.slot-btn.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+.slot-btn.disabled {
+  background-color: #f0f0f0;
+  color: #ccc;
+  cursor: not-allowed;
+}
+.slot-btn.reserved {
+  background-color: #f0f0f0;
+  color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+

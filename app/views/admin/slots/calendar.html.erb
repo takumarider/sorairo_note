@@ -1,0 +1,176 @@
+<div class="admin-calendar-container" 
+     data-controller="admin-calendar"
+     data-admin-calendar-slots-url-value="/admin/slots.json"
+     data-admin-calendar-create-url-value="/admin/slots">
+  
+  <!-- カレンダー表示エリア -->
+  <div class="calendar-wrapper">
+    <div id="calendar" data-admin-calendar-target="calendar"></div>
+  </div>
+
+  <!-- 時間枠作成モーダル -->
+  <div id="slot-modal" 
+       class="modal hidden" 
+       data-admin-calendar-target="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>時間枠を作成</h3>
+        <button type="button" 
+                class="close-btn" 
+                data-action="click->admin-calendar#closeModal">
+          &times;
+        </button>
+      </div>
+      
+      <form data-admin-calendar-target="form" 
+            data-action="submit->admin-calendar#createSlot">
+        <div class="form-group">
+          <label for="slot_start_time">開始時間</label>
+          <input type="datetime-local" 
+                 id="slot_start_time" 
+                 name="slot[start_time]" 
+                 required>
+        </div>
+        
+        <div class="form-group">
+          <label for="slot_end_time">終了時間</label>
+          <input type="datetime-local" 
+                 id="slot_end_time" 
+                 name="slot[end_time]" 
+                 required>
+        </div>
+        
+        <div class="form-group">
+          <label for="slot_available">利用可能</label>
+          <select id="slot_available" name="slot[available]">
+            <option value="true">利用可能</option>
+            <option value="false">利用不可</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" 
+                  class="btn btn-secondary" 
+                  data-action="click->admin-calendar#closeModal">
+            キャンセル
+          </button>
+          <button type="submit" class="btn btn-primary">
+            作成
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.admin-calendar-container {
+  padding: 20px;
+}
+
+.calendar-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+#calendar {
+  height: 600px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+</style> 

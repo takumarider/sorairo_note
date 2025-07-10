@@ -1,31 +1,232 @@
+<div data-controller="menu-form">
 <h2>施術メニュー一覧</h2>
 
-<%= link_to "新規メニュー作成", new_admin_menu_path, class: "btn btn-primary" %>
+  <!-- フラッシュメッセージ表示領域 -->
+  <div id="flash"></div>
 
-<table>
-  <thead>
-    <tr>
-      <th>名前</th>
-      <th>時間枠</th>
-      <th>価格</th>
-      <th>期間</th>
-      <th>提供中</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @menus.each do |menu| %>
-      <tr>
-        <td><%= menu.name %></td>
-        <td><%= menu.slot&.start_time.strftime("%H:%M") %>〜<%= menu.slot&.end_time.strftime("%H:%M") %></td>
-        <td><%= menu.price %>円</td>
-        <td><%= menu.start_date %>〜<%= menu.end_date %></td>
-        <td><%= menu.available ? "○" : "×" %></td>
-        <td>
-          <%= link_to "編集", edit_admin_menu_path(menu) %> |
-          <%= link_to "削除", admin_menu_path(menu), data: { turbo_method: :delete } %>
-        </td>
-      </tr>
+  <!-- 新規作成ボタン -->
+  <div class="menu-actions">
+    <button type="button" 
+            class="btn btn-primary" 
+            data-action="click->menu-form#toggleForm"
+            data-menu-form-target="toggleButton">
+      ＋ 新規メニューを追加
+    </button>
+  </div>
+
+  <!-- 新規作成フォーム（初期状態では非表示） -->
+  <div class="menu-form-container hidden" 
+       data-menu-form-target="formContainer">
+    <div class="form-card">
+      <h3>新規メニュー作成</h3>
+      
+      <%= form_with model: [:admin, Menu.new], 
+                    local: false, 
+                    data: { 
+                      action: "turbo:submit-end->menu-form#handleSubmit",
+                      menu_form_target: "form"
+                    } do |f| %>
+        
+        <div class="form-group">
+          <%= f.label :name, "メニュー名" %>
+          <%= f.text_field :name, required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :description, "説明" %>
+          <%= f.text_area :description %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :price, "価格（円）" %>
+          <%= f.number_field :price, required: true, min: 0 %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :duration, "施術時間（分）" %>
+          <%= f.number_field :duration, required: true, min: 1 %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :slot_id, "時間枠" %>
+          <%= f.collection_select :slot_id, 
+                                  Slot.order(:start_time), 
+                                  :id, 
+                                  ->(s) { "#{s.start_time.strftime("%H:%M")}〜#{s.end_time.strftime("%H:%M")}" }, 
+                                  { prompt: "選択してください" }, 
+                                  { required: true } %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :start_date, "提供開始日" %>
+          <%= f.date_field :start_date, required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :end_date, "提供終了日" %>
+          <%= f.date_field :end_date, required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :available, "提供中" %>
+          <%= f.check_box :available %>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" 
+                  class="btn btn-secondary" 
+                  data-action="click->menu-form#toggleForm">
+            キャンセル
+          </button>
+          <%= f.submit "作成", class: "btn btn-primary" %>
+        </div>
     <% end %>
-  </tbody>
-</table>
+    </div>
+  </div>
+
+  <!-- メニュー一覧テーブル -->
+  <div id="menu-list">
+    <%= render "admin/menus/menu_list", menus: @menus %>
+  </div>
+</div>
+
+<style>
+.menu-actions {
+  margin: 20px 0;
+}
+
+.menu-form-container {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.menu-form-container.hidden {
+  display: none;
+}
+
+.form-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+.menu-list {
+  margin-top: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #f8f9fa;
+  font-weight: bold;
+  color: #333;
+}
+
+tr:hover {
+  background: #f8f9fa;
+}
+
+.alert {
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+</style>

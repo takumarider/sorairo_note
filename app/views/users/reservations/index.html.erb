@@ -1,23 +1,64 @@
-<h2>予約一覧</h2>
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-sky-800 mb-2">📋 予約一覧</h1>
+      <p class="text-sky-600">あなたの予約状況を確認できます</p>
+    </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>日時</th>
-      <th>メニュー</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @reservations.each do |reservation| %>
-      <tr>
-        <td><%= reservation.slot.start_time.strftime("%Y/%m/%d %H:%M") %></td>
-        <td><%= reservation.menu.name %></td>
-        <td>
-          <%= link_to "編集", edit_users_reservation_path(reservation) %>
-          <!-- 削除機能があればここに削除リンクも追加 -->
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <!-- 新規予約ボタン -->
+    <div class="text-center mb-6">
+      <%= link_to "新規予約を作成", new_users_reservation_path, 
+          class: "inline-flex items-center px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors duration-200" %>
+    </div>
+
+    <% if @reservations.any? %>
+<% grouped_reservations = @reservations.group_by { |r| r.slot.start_time.to_date } %>
+
+<% grouped_reservations.each do |date, reservations| %>
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            📅 <%= date.strftime("%Y年%m月%d日（%a）") %>
+          </h3>
+          <div class="space-y-3">
+      <% reservations.each do |reservation| %>
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="flex items-center space-x-4">
+                  <div class="text-sm font-medium text-gray-900">
+                    🕐 <%= reservation.slot.start_time.strftime("%H:%M") %> 〜 <%= reservation.slot.end_time.strftime("%H:%M") %>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    💇‍♀️
+                    <% if reservation.menu.is_a?(Menu) && reservation.menu.present? %>
+                      <% name = reservation.menu.name %>
+                    <% elsif reservation.menu.is_a?(Hash) %>
+                      <% name = reservation.menu["name"] || reservation.menu[:name] || "メニュー名不明" %>
+                    <% else %>
+                      <% name = "メニュー名不明" %>
+                    <% end %>
+                    <%= name %>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+          <%= link_to "編集", edit_users_reservation_path(reservation),
+                      class: "inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-colors duration-200" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+        <div class="text-gray-400 mb-4">
+          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">予約がありません</h3>
+        <p class="text-gray-500 mb-4">まだ予約がありません。新しい予約を作成してみましょう。</p>
+        <%= link_to "新規予約を作成", new_users_reservation_path, 
+            class: "inline-flex items-center px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors duration-200" %>
+      </div>
+<% end %>
+  </div>
+</div>

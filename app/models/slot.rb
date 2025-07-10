@@ -3,8 +3,18 @@ class Slot < ApplicationRecord
   validate :end_time_after_start_time
   validate :no_overlap
 
-  has_many :menus, dependent: :destroy
   has_many :reservations, dependent: :destroy
+  has_many :menus, dependent: :nullify
+
+  # 予約可能かどうかを判定
+  def available?
+    available && reservations.empty?
+  end
+
+  # 予約済みかどうかを判定
+  def booked?
+    reservations.exists?
+  end
 
   private
 

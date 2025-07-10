@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_08_121827) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_10_042152) do
   create_table "menus", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -19,9 +19,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_08_121827) do
     t.date "start_date"
     t.date "end_date"
     t.boolean "available", default: true, null: false
-    t.bigint "slot_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "slot_id"
     t.index ["slot_id"], name: "index_menus_on_slot_id"
   end
 
