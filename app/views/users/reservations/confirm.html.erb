@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 py-8">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-sky-800 mb-2">📋 予約確認</h1>
+      <p class="text-sky-600">予約内容をご確認ください</p>
+    </div>
+
+    <!-- 確認カード -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+      <div class="text-center mb-6">
+        <div class="text-4xl mb-4">✅</div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">予約内容の確認</h2>
+        <p class="text-gray-600">以下の内容で予約を確定しますか？</p>
+      </div>
+
+      <!-- 予約詳細 -->
+      <div class="space-y-6">
+        <!-- 日時 -->
+        <div class="flex items-center p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-lg border border-sky-200">
+          <div class="text-2xl mr-4">🗓️</div>
+          <div>
+            <div class="text-sm text-gray-600">予約日時</div>
+            <div class="text-lg font-semibold text-gray-900">
+              <%= @slot.start_time.strftime("%Y年%m月%d日（%a）") %>
+            </div>
+            <div class="text-lg font-semibold text-gray-900">
+              <%= @slot.start_time.strftime("%H:%M") %> 〜 <%= @slot.end_time.strftime("%H:%M") %>
+            </div>
+          </div>
+        </div>
+
+        <!-- メニュー -->
+        <div class="flex items-center p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+          <div class="text-2xl mr-4">💇‍♀️</div>
+          <div>
+            <div class="text-sm text-gray-600">選択メニュー</div>
+            <div class="text-lg font-semibold text-gray-900">
+              <%= @menu.name %>
+            </div>
+            <% if @menu.description.present? %>
+              <div class="text-sm text-gray-600 mt-1">
+                <%= @menu.description %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- 料金 -->
+        <div class="flex items-center p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+          <div class="text-2xl mr-4">💰</div>
+          <div>
+            <div class="text-sm text-gray-600">料金</div>
+            <div class="text-2xl font-bold text-gray-900">
+              ¥<%= number_with_delimiter(@menu.price) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 注意事項 -->
+      <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div class="flex items-start">
+          <div class="text-yellow-600 mr-3 mt-1">⚠️</div>
+          <div class="text-sm text-yellow-800">
+            <div class="font-semibold mb-2">ご注意事項</div>
+            <ul class="list-disc list-inside space-y-1">
+              <li>予約確定後は変更できません</li>
+              <li>キャンセルは前日までにお電話でお願いします</li>
+              <li>当日のキャンセルは料金が発生する場合があります</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ボタン群 -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <!-- 戻るボタン -->
+      <%= link_to new_users_reservation_path, 
+          class: "flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl" do %>
+        <span class="mr-2">←</span>
+        戻る
+      <% end %>
+
+      <!-- 確定ボタン -->
+      <%= button_to confirm_create_users_reservations_path, 
+          method: :post,
+          class: "flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105" do %>
+        <span class="mr-2">✅</span>
+        予約を確定する
+      <% end %>
+    </div>
+  </div>
+</div> 

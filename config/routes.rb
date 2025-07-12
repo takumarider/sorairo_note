@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   get "users/mypage", to: "users#mypage", as: :mypage
 
   namespace :users do
-    resources :reservations, only: [ :index, :new, :create, :edit, :update ]
+    resources :reservations, only: [ :index, :new, :create, :edit, :update ] do
+      collection do
+        get :confirm
+        post :confirm_create
+      end
+    end
     get "calendar", to: "calendar#index"
     get "calendar/slots/:date", to: "calendar#slots_for_date"
     get "calendar/menus", to: "calendar#menus"

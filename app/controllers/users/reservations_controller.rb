@@ -2,7 +2,11 @@ class Users::ReservationsController < ApplicationController
   before_action :set_reservation, only: [ :edit, :update ]
 
   def index
-    @reservations = current_user.reservations.includes(:menu, :slot).order(created_at: :desc)
+    @reservations = current_user.reservations
+                               .includes(:menu, :slot)
+                               .joins(:slot)
+                               .order("slots.start_time ASC")
+                               .order(created_at: :desc)
   end
 
   def new
@@ -23,8 +27,16 @@ class Users::ReservationsController < ApplicationController
 
   def create
     @reservation = current_user.reservations.new(reservation_params)
-    if @reservation.save
-      redirect_to users_reservations_path, notice: "予約が完了しました"
+
+    # バリデーションチェック
+    if @reservation.valid?
+      # 確認画面用のセッションに保存
+      session[:pending_reservation] = reservation_params
+      session[:pending_reservation][:slot_id] = @reservation.slot_id
+      session[:pending_reservation][:menu_id] = @reservation.menu_id
+
+      # 確認画面にリダイレクト
+      redirect_to confirm_users_reservations_path, notice: "予約内容を確認してください"
     else
       @menus = Menu.available
 
@@ -34,7 +46,43 @@ class Users::ReservationsController < ApplicationController
                                      .pluck(:slot_id)
       @all_slots = Slot.where("start_time > ?", Time.current).order(:start_time)
       @available_slots = @all_slots.where.not(id: @reserved_slot_ids)
-      render :new
+
+      # Turbo対応: 失敗時にstatus: :unprocessable_entityを付与
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def confirm
+    # セッションから予約情報を取得
+    pending_data = session[:pending_reservation]
+
+    if pending_data.blank?
+      redirect_to new_users_reservation_path, alert: "予約情報が見つかりません"
+      return
+    end
+
+    @reservation = current_user.reservations.new(pending_data)
+    @slot = Slot.find(pending_data[:slot_id])
+    @menu = Menu.find(pending_data[:menu_id])
+  end
+
+  def confirm_create
+    # セッションから予約情報を取得
+    pending_data = session[:pending_reservation]
+
+    if pending_data.blank?
+      redirect_to new_users_reservation_path, alert: "予約情報が見つかりません"
+      return
+    end
+
+    @reservation = current_user.reservations.new(pending_data)
+
+    if @reservation.save
+      # セッションをクリア
+      session.delete(:pending_reservation)
+      redirect_to users_reservations_path, notice: "予約が完了しました！"
+    else
+      redirect_to new_users_reservation_path, alert: "予約の作成に失敗しました"
     end
   end
 

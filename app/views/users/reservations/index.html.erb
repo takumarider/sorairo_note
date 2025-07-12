@@ -7,40 +7,37 @@
 
     <!-- 新規予約ボタン -->
     <div class="text-center mb-6">
-      <%= link_to "新規予約を作成", new_users_reservation_path, 
-          class: "inline-flex items-center px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors duration-200" %>
+      <%= link_to new_users_reservation_path, 
+          class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105" do %>
+        <span class="mr-2">➕</span>
+        新規予約を作成
+      <% end %>
     </div>
 
     <% if @reservations.any? %>
-<% grouped_reservations = @reservations.group_by { |r| r.slot.start_time.to_date } %>
-
-<% grouped_reservations.each do |date, reservations| %>
+      <% 
+        # 予約を日付でグループ化し、各日付内で時間順にソート
+        grouped_reservations = @reservations.group_by { |r| r.slot.start_time.to_date }
+        grouped_reservations.each do |date, reservations|
+          # 各日付内で時間順にソート
+          sorted_reservations = reservations.sort_by { |r| r.slot.start_time }
+      %>
         <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            📅 <%= date.strftime("%Y年%m月%d日（%a）") %>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <span class="mr-2">📅</span>
+            <%= date.strftime("%Y年%m月%d日（%a）") %>
+            <span class="ml-2 text-sm text-gray-500">(<%= sorted_reservations.count %>件)</span>
           </h3>
           <div class="space-y-3">
-      <% reservations.each do |reservation| %>
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <% sorted_reservations.each do |reservation| %>
+              <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200">
                 <div class="flex items-center space-x-4">
-                  <div class="text-sm font-medium text-gray-900">
+                  <div class="text-sm font-medium text-gray-900 bg-white px-3 py-1 rounded-full shadow-sm">
                     🕐 <%= reservation.slot.start_time.strftime("%H:%M") %> 〜 <%= reservation.slot.end_time.strftime("%H:%M") %>
                   </div>
-                  <div class="text-sm text-gray-600">
-                    💇‍♀️
-                    <% if reservation.menu.is_a?(Menu) && reservation.menu.present? %>
-                      <% name = reservation.menu.name %>
-                    <% elsif reservation.menu.is_a?(Hash) %>
-                      <% name = reservation.menu["name"] || reservation.menu[:name] || "メニュー名不明" %>
-                    <% else %>
-                      <% name = "メニュー名不明" %>
-                    <% end %>
-                    <%= name %>
+                  <div class="text-sm text-gray-700 bg-white px-3 py-1 rounded-full shadow-sm">
+                    💇‍♀️ <%= reservation.menu&.name || "メニュー名不明" %>
                   </div>
-                </div>
-                <div class="flex items-center space-x-2">
-          <%= link_to "編集", edit_users_reservation_path(reservation),
-                      class: "inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-colors duration-200" %>
                 </div>
               </div>
             <% end %>
@@ -50,15 +47,18 @@
     <% else %>
       <div class="bg-white rounded-xl shadow-lg p-8 text-center">
         <div class="text-gray-400 mb-4">
-          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
         <h3 class="text-lg font-medium text-gray-900 mb-2">予約がありません</h3>
-        <p class="text-gray-500 mb-4">まだ予約がありません。新しい予約を作成してみましょう。</p>
-        <%= link_to "新規予約を作成", new_users_reservation_path, 
-            class: "inline-flex items-center px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors duration-200" %>
+        <p class="text-gray-500 mb-6">まだ予約がありません。新しい予約を作成してみましょう。</p>
+        <%= link_to new_users_reservation_path, 
+            class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105" do %>
+          <span class="mr-2">➕</span>
+          新規予約を作成
+        <% end %>
       </div>
-<% end %>
+    <% end %>
   </div>
 </div>
