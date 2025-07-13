@@ -5,6 +5,7 @@ class Users::ReservationsController < ApplicationController
     @reservations = current_user.reservations
                                .includes(:menu, :slot)
                                .joins(:slot)
+                               .where("slots.start_time >= ?", Date.current.beginning_of_day)
                                .order("slots.start_time ASC")
                                .order(created_at: :desc)
   end

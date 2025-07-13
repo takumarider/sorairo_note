@@ -5,7 +5,7 @@
       <p class="text-sky-600">希望の時間枠とメニューを選択してください</p>
     </div>
 
-    <%= form_with model: [:users, @reservation], local: true, class: "space-y-8 overflow-visible pb-24" do |f| %>
+    <%= form_with model: [:users, @reservation], local: true, class: "space-y-8 overflow-visible pb-24", html: { novalidate: true } do |f| %>
       <% if @reservation.errors.any? %>
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
           <div class="flex">
@@ -84,7 +84,7 @@
         </div>
 
         <!-- hidden_field に slot_id をセット -->
-        <%= f.hidden_field :slot_id, id: "reservation_slot_id", data: { calendar_target: "slotInput" } %>
+        <%= f.hidden_field :slot_id, id: "reservation_slot_id", data: { calendar_target: "slotInput" }, required: true %>
       </div>
 
       <!-- 直接JavaScript -->
@@ -138,7 +138,7 @@
             <%= f.label :menu_id, "施術メニュー", class: "block text-sm font-medium text-gray-700 mb-2" %>
             <%= f.collection_select :menu_id, @menus, :id, :display_name, 
                 { prompt: "メニューを選択してください" }, 
-                { class: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500" } %>
+                { class: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500", required: true } %>
           </div>
         </div>
       </div>
@@ -192,6 +192,31 @@
               var selected = menuSelect.options[menuSelect.selectedIndex];
               document.getElementById('selected-menu').textContent = selected.text || '未選択';
             }
+          }
+
+          // フォームバリデーション
+          const form = document.querySelector('form');
+          if (form) {
+            form.addEventListener('submit', function(e) {
+              const slotId = document.getElementById('reservation_slot_id').value;
+              const menuId = menuSelect ? menuSelect.value : '';
+
+              let errors = [];
+
+              if (!slotId) {
+                errors.push('時間枠を選択してください');
+              }
+
+              if (!menuId) {
+                errors.push('メニューを選択してください');
+              }
+
+              if (errors.length > 0) {
+                e.preventDefault();
+                alert('以下の項目を確認してください：\n\n' + errors.join('\n'));
+                return false;
+              }
+            });
           }
         });
       </script>
