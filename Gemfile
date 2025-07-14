@@ -66,3 +66,4 @@ end
 gem "devise"
 gem "dotenv-rails", groups: [ :development, :test ]
 gem "dotenv", require: "dotenv/load"
+gem "solid_cable"

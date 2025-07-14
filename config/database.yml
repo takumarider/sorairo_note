@@ -1,5 +1,5 @@
 # 開発・テスト用：MySQL
-default_mysql: &default_mysql
+default: &default
   adapter: mysql2
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
@@ -10,11 +10,11 @@ default_mysql: &default_mysql
   socket: <%= ENV["MYSQL_SOCKET"] || "/tmp/mysql.sock" %>
 
 development:
-  <<: *default_mysql
+  <<: *default
   database: sorairo_note_development
 
 test:
-  <<: *default_mysql
+  <<: *default
   database: sorairo_note_test
 
 # 本番用：PostgreSQL（Render）
@@ -25,3 +25,6 @@ production:
   url: <%= ENV["DATABASE_URL"] %>
   variables:
     sslmode: <%= ENV.fetch("PGSSLMODE", "require") %>
+  # RenderではDATABASE_URLを環境変数で設定するため、ここでは直接指定しない
+  # 代わりに、render.yamlで設定することが推奨されます
+  # 例: DATABASE_URL: postgres://user:password@host:port/database 
