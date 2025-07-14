@@ -29,3 +29,5 @@ default_postgresql: &default_postgresql
 production:
   <<: *default_postgresql
   database: <%= ENV["DB_NAME"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+  sslmode: require
