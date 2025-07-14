@@ -25,6 +25,3 @@ production:
   url: <%= ENV["DATABASE_URL"] %>
   variables:
     sslmode: <%= ENV.fetch("PGSSLMODE", "require") %>
-  # RenderではDATABASE_URLを環境変数で設定するため、ここでは直接指定しない
-  # 代わりに、render.yamlで設定することが推奨されます
-  # 例: DATABASE_URL: postgres://user:password@host:port/database 
