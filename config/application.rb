@@ -2,30 +2,28 @@ require_relative "boot"
 
 require "rails/all"
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
+# Gemfile に記載された gem を読み込む
 Bundler.require(*Rails.groups)
+
+# .env の環境変数を読み込む（開発・テスト環境のみ）
+if Rails.env.development? || Rails.env.test?
+  require "dotenv/load"
+end
 
 module SorairoNote
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
+    # 使用する Rails バージョンの初期設定を読み込む
     config.load_defaults 8.0
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    # lib ディレクトリのうち、読み込まないサブディレクトリを指定
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
-
-    # Add builds directory to asset pipeline
+    # アセットパイプラインのパスに追加
     config.assets.paths << Rails.root.join("app/assets/builds")
     config.assets.paths << Rails.root.join("app/assets/stylesheets")
+
+    # タイムゾーンや eager_load_paths の追加設定は必要に応じて
+    # config.time_zone = "Tokyo"
+    # config.eager_load_paths << Rails.root.join("lib")
   end
 end
