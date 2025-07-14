@@ -6,5 +6,7 @@ services:
     buildCommand: "./bin/render-build.sh"
     startCommand: "bundle exec puma -C config/puma.rb"
     envVars:
-      - fromDotEnv: true
+      - fromDotEnv: true   # ← 開発用だけにしておくのが安全
+      - key: DATABASE_URL
+        value: <実際のURL>  # ← こちらのほうが確実
     autoDeploy: true
