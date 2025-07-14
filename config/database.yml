@@ -22,4 +22,5 @@ production:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   url: <%= ENV["DATABASE_URL"] %>
-  variables:
+  variables: {}
+  # socketは必要に応じて指定してください（環境によりパスは異なります）
