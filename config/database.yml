@@ -1,4 +1,3 @@
-# 開発・テスト用：MySQL
 default: &default
   adapter: mysql2
   encoding: utf8mb4
@@ -7,7 +6,8 @@ default: &default
   username: <%= ENV["MYSQL_USERNAME"] %>
   password: <%= ENV["MYSQL_PASSWORD"] %>
   host: <%= ENV["MYSQL_HOST"] || "localhost" %>
-  socket: <%= ENV["MYSQL_SOCKET"] || "/tmp/mysql.sock" %>
+  # socketは必要に応じて指定してください（環境によりパスは異なります）
+  socket:
 
 development:
   <<: *default
@@ -17,11 +17,9 @@ test:
   <<: *default
   database: sorairo_note_test
 
-# 本番用：PostgreSQL（Render）
 production:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   url: <%= ENV["DATABASE_URL"] %>
   variables:
-    sslmode: <%= ENV.fetch("PGSSLMODE", "require") %>
