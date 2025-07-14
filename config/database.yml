@@ -1,7 +1,8 @@
 # 開発・テスト用：MySQL
 default_mysql: &default_mysql
   adapter: mysql2
-  encoding: utf8
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: <%= ENV["MYSQL_USERNAME"] %>
   password: <%= ENV["MYSQL_PASSWORD"] %>
@@ -22,4 +23,5 @@ production:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   url: <%= ENV["DATABASE_URL"] %>
-  sslmode: require
+  variables:
+    sslmode: require   # sslmodeは変数で渡す形に修正
