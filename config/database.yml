@@ -3,11 +3,10 @@ default: &default
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
-  username: <%= ENV["MYSQL_USERNAME"] %>
+  username: root
   password: <%= ENV["MYSQL_PASSWORD"] %>
   host: <%= ENV["MYSQL_HOST"] || "localhost" %>
-  # socketは必要に応じて指定してください（環境によりパスは異なります）
-  socket:
+  # socket: （必要に応じて指定）
 
 development:
   <<: *default
@@ -18,9 +17,9 @@ test:
   database: sorairo_note_test
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
-  url: <%= ENV["DATABASE_URL"] %>
-  variables: {}
-  # socketは必要に応じて指定してください（環境によりパスは異なります）
+  <<: *default
+  database: sorairo_note_production
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+  host: <%= ENV["DB_HOST"] %>
+  # socket: （必要に応じて指定）
