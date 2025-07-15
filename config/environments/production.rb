@@ -54,7 +54,7 @@ Rails.application.configure do
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # ✅ Action Cable adapter の設定を追加
-  config.action_cable.adapter = :solid_cable
+  # config.action_cable.adapter = :solid_cable
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # config.action_mailer.raise_delivery_errors = false
