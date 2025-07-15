@@ -47,7 +47,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :memory_store
+  config.cache_store = :null_store
 
   # ✅ Active Job を簡易モード(:async)に変更（Solid Queueは使わない）
   config.active_job.queue_adapter = :async

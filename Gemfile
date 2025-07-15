@@ -21,9 +21,9 @@ gem "devise"
 gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Solid系
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
+# gem "solid_cache"
+# gem "solid_queue"
+# gem "solid_cable"
 
 # 起動高速化・デプロイ系
 gem "bootsnap", require: false
