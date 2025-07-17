@@ -116,3 +116,6 @@ Stamp（スタンプ）
 [https://gyazo.com/08be93e4661901fe4332954e1f09fffc]
 [https://gyazo.com/5192264e5b42e94b8de68ae6552443d0]
 [https://gyazo.com/f025f93f87c1a9d917c351a978103ae5]
+
+## renderでデプロイ
+[https://sorairo-note.onrender.com]
